@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="MANIFEST-AXIA-ENERGIA-01" version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+
+  <organizations default="ORG-AXIA-01">
+    <organization identifier="ORG-AXIA-01">
+      <title>Axia Energia - Treinamento Interativo</title>
+      <item identifier="ITEM-01" identifierref="RES-01">
+        <title>Módulo Principal</title>
+        <adlcp:masteryscore>80</adlcp:masteryscore>
+      </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <resource identifier="RES-01" type="webcontent" adlcp:scormtype="sco" href="index.html">
+      <file href="index.html"/>
+      <file href="assets/main.js"/>
+      <file href="assets/main.css"/>
+    </resource>
+  </resources>
+</manifest>
