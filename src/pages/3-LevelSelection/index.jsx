@@ -231,7 +231,7 @@ export function LevelSelection() {
               isUnlocked={unlockedLevels >= 1}
               isSelected={selectedLevel === 1}
               onClick={handleLevelClick}
-              top="400px"
+              top="350px"
               left="250px"
               size="127px"
               numberTop="95%"
