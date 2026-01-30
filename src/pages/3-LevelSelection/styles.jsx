@@ -129,41 +129,6 @@ export const MapContainer = styled.div`
     z-index: 0;
     animation: ${GlowPulse} 3s ease-in-out infinite;
   }
-
-  .guide-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-
-    .guide-img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.2;
-      display: block;
-
-      &.f4 {
-        z-index: 1;
-      }
-
-      &.f3 {
-        z-index: 2;
-      }
-
-      &.f2 {
-        z-index: 3;
-      }
-
-      &.f1 {
-        z-index: 4;
-      }
-    }
-  }
 `;
 
 export const MainContainer = styled.div`
@@ -184,7 +149,7 @@ export const MainContainer = styled.div`
 
   .map-row {
     position: absolute;
-    top: 0;
+    top: -3rem;
     left: 0;
     width: 100%;
     height: 100%;
