@@ -92,7 +92,11 @@ export function LevelSelection() {
                 </div>
               ) : (
                 <div>
-                  <b>Selecione uma fase no mapa para começar!</b>
+                  <b>
+                    Selecione uma fase no mapa!
+                    <br />
+                    <i>Para fins de teste a fase 1 e 2 estão desbloqueadas.</i>
+                  </b>
                 </div>
               )}
             </div>
