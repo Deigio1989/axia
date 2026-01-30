@@ -149,7 +149,7 @@ export const MainContainer = styled.div`
 
   .map-row {
     position: absolute;
-    top: -3rem;
+    top: -2rem;
     left: 0;
     width: 100%;
     height: 100%;
