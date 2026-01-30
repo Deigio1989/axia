@@ -13,7 +13,7 @@ import {
 import { PageLayout } from "../../components";
 
 export function GameIntro() {
-  const { visitPage, playerName, navigateWithTransition } =
+  const { visitPage, playerName, playerAvatar, navigateWithTransition } =
     useProgressionStore();
   const navigate = useNavigate();
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -37,7 +37,7 @@ export function GameIntro() {
     <PageLayout backgroundImage="/images/fundo-azul.png">
       <MainContainer>
         <SelectionBox $isExiting={isTransitioning}>
-          <Avatar type="M" size="large" epi={true} />
+          <Avatar type={playerAvatar || "M"} size="large" epi={true} />
 
           <p className="question">Boas-vindas, {playerName || "Jogador"}!</p>
         </SelectionBox>
