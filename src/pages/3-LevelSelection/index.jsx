@@ -9,9 +9,9 @@ export function LevelSelection() {
   const { visitPage, playerName, navigateWithTransition, maxReached } =
     useProgressionStore();
   const navigate = useNavigate();
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [cardWidth, setCardWidth] = useState(500);
 
   // Determina quais níveis estão desbloqueados
   // Se maxReached >= 3, desbloqueia os níveis até maxReached - 2
@@ -43,6 +43,7 @@ export function LevelSelection() {
   const handleLevelClick = (levelNumber) => {
     console.log(`Nível ${levelNumber} clicado!`);
     setSelectedLevel(levelNumber);
+    setCardWidth(400);
   };
 
   const handleAdvance = () => {
@@ -50,23 +51,26 @@ export function LevelSelection() {
 
     setTimeout(() => {
       setIsButtonPressed(false);
-      visitPage(4);
-      navigateWithTransition(navigate, "/", {
-        type: "fade",
-        duration: 300,
-        delay: 0,
-      });
     }, 175);
+    setTimeout(() => {
+      if (selectedLevel) {
+        navigate(`/levels/${selectedLevel}`);
+      }
+    }, 200);
   };
 
   return (
     <PageLayout backgroundImage="/images/fundo-azul.png">
       <MainContainer>
         <div className="flex-column">
-          {selectedLevel && (
+          {selectedLevel ? (
             <>
               <Title>FASE {selectedLevel}</Title>
               <p>{levelTexts[selectedLevel]?.title || "Selecione uma fase"}</p>
+            </>
+          ) : (
+            <>
+              <Title>FASES DO JOGO</Title>
             </>
           )}
           <NineSliceContainer
@@ -77,8 +81,8 @@ export function LevelSelection() {
             $sliceLeft="50"
             $repeat="stretch"
             $minHeight="10px"
-            $padding="1rem"
-            style={{ width: "350px" }}
+            $padding="0.5rem"
+            style={{ width: cardWidth }}
           >
             <div className="slice-content">
               {selectedLevel ? (
@@ -92,11 +96,18 @@ export function LevelSelection() {
                 </div>
               ) : (
                 <div>
-                  <b>
-                    Selecione uma fase no mapa!
-                    <br />
-                    <i>Para fins de teste a fase 1 e 2 estão desbloqueadas.</i>
-                  </b>
+                  Para vencer no jogo, você passará por 10 fases: <br />
+                  <b>FASE 1: </b> A importância do setor elétrico no Brasil{" "}
+                  <br />
+                  <b>FASE 2: </b> O avanço na legislação do setor <br />
+                  <b>FASE 3: </b> A engrenagem do setor elétrico <br />
+                  <b>FASE 4: </b> Geração de energia elétrica <br />
+                  <b>FASE 5: </b> Transmissão e distribuição de energia <br />
+                  <b>FASE 6: </b> Comercialização de energia elétrica <br />
+                  <b>FASE 7: </b> Consumo de energia elétrica <br />
+                  <b>FASE 8: </b> Riscos e medidas de prevenção <br />
+                  <b>FASE 9: </b> Sustentabilidade e proteção ambiental <br />
+                  <b>FASE 10: </b> O futuro que estamos construindo
                 </div>
               )}
             </div>
@@ -238,17 +249,19 @@ export function LevelSelection() {
               numberLeft="50%"
             />
           </div>
-          <AdvanceButton onClick={handleAdvance} $isPressed={isButtonPressed}>
-            <img
-              src={
-                isButtonPressed
-                  ? "/images/start-button-pressed.png"
-                  : "/images/start-button.png"
-              }
-              alt=""
-            />
-            <span>INICIAR</span>
-          </AdvanceButton>
+          {selectedLevel && (
+            <AdvanceButton onClick={handleAdvance} $isPressed={isButtonPressed}>
+              <img
+                src={
+                  isButtonPressed
+                    ? "/images/start-button-pressed.png"
+                    : "/images/start-button.png"
+                }
+                alt=""
+              />
+              <span>INICIAR</span>
+            </AdvanceButton>
+          )}
         </MapContainer>
       </MainContainer>
     </PageLayout>

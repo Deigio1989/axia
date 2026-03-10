@@ -46,11 +46,14 @@ export const Container = styled.div`
 
   /* Estilos do conteúdo interno */
   padding: ${(props) => props.$padding || "0"};
-  width: ${(props) => props.$width || "100%"};
+  width: ${(props) => props.$width || "auto"};
   min-height: ${(props) => props.$minHeight || "200px"};
 
   /* Box model */
   box-sizing: border-box;
+
+  /* Isola o layout para prevenir reflows externos */
+  contain: layout paint;
 
   /* Flexbox para conteúdo centralizado (opcional) */
   display: ${(props) => props.$display || "flex"};
@@ -58,4 +61,35 @@ export const Container = styled.div`
   align-items: ${(props) => props.$alignItems || "center"};
   justify-content: ${(props) => props.$justifyContent || "center"};
   gap: ${(props) => props.$gap || "1rem"};
+
+  /* Otimizações para prevenir flickering durante animações */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Força renderização em camada separada */
+  will-change: transform;
+
+  /* Estabiliza todos os textos filhos */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-synthesis: none;
+    -webkit-font-synthesis: none;
+  }
+
+  /* Garante que texto bold use a fonte bold correta */
+  strong,
+  b,
+  .slice-content {
+    font-family: var(--font-family-bold);
+    font-weight: 700;
+  }
+
+  p,
+  span {
+    font-family: var(--font-family-regular);
+  }
 `;

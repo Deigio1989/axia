@@ -23,6 +23,7 @@ import LevelSelection from "./pages/3-LevelSelection";
 import Test from "./pages/Test";
 import NotFoundPage from "./pages/NotFound";
 import Level1 from "./pages/4-Levels/Level1";
+import GameRules from "./pages/2-GameRules";
 
 function App() {
   const { isInitialized, isLoading, studentName } = useScorm();
@@ -46,6 +47,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/avatar" element={<AvatarSelection />} />
             <Route path="/intro" element={<GameIntro />} />
+            <Route path="/rules" element={<GameRules />} />
             <Route path="/levels" element={<LevelSelection />} />
             <Route path="/levels/1" element={<Level1 />} />
             <Route path="*" element={<NotFoundPage />} />

@@ -1,8 +1,13 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  background-image: url(${(props) =>
-    props.$backgroundImage || "/images/avatar-selection-bg.png"});
+  cursor:
+    url("/images/cursor.png") 0 0,
+    auto;
+  background-image: ${(props) =>
+    props.$backgroundImage
+      ? `url("${props.$backgroundImage}")`
+      : 'url("/images/avatar-selection-bg.png")'};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

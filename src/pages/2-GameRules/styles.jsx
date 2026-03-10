@@ -3,13 +3,6 @@ import styled, { keyframes, css } from "styled-components";
 // Multiplicador de escala para o glow
 const GLOW_SCALE = 1.5;
 
-const Lightpulse = keyframes`
-     0%   { box-shadow: 0 0 18px 4px rgba(255,255,255,0.50); }
-  50%  { box-shadow: 0 0 19px 5px hsla(0, 0%, 100%, 0.55); }
-  100% { box-shadow: 0 0 18px 4px rgba(255,255,255,0.50); }
-
-`;
-
 // Animações
 const slideInFromTop = keyframes`
   from {
@@ -90,109 +83,107 @@ const fadeInContent = keyframes`
     opacity: 1;
   }
 `;
-const GlowPulse = keyframes`
-  0%, 100% {
-    box-shadow: 
-      0 0 ${80 * GLOW_SCALE}px ${40 * GLOW_SCALE}px rgba(43, 0, 255, 0.8),
-      0 ${-20 * GLOW_SCALE}px ${100 * GLOW_SCALE}px ${50 * GLOW_SCALE}px rgba(4, 0, 255, 0.6),
-      0 ${-40 * GLOW_SCALE}px ${150 * GLOW_SCALE}px ${75 * GLOW_SCALE}px rgba(0, 55, 255, 0.4);
-  }
-  50% {
-    box-shadow: 
-      0 0 ${100 * GLOW_SCALE}px ${50 * GLOW_SCALE}px #0015ff,
-      0 ${-20 * GLOW_SCALE}px ${130 * GLOW_SCALE}px ${65 * GLOW_SCALE}px rgba(0, 34, 255, 0.8),
-      0 ${-40 * GLOW_SCALE}px ${180 * GLOW_SCALE}px ${90 * GLOW_SCALE}px rgba(0, 115, 255, 0.6);
-  }
-`;
-
-export const MapContainer = styled.div`
-  position: relative;
-  width: 500px;
-  min-height: 450px;
-
-  &::before {
-    content: "";
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1px;
-    height: 1px;
-    background: radial-gradient(
-      ellipse,
-      rgba(0, 200, 255, 0.6) 0%,
-      rgba(0, 200, 255, 0.3) 40%,
-      transparent 70%
-    );
-    border-radius: 50%;
-    z-index: 0;
-    animation: ${GlowPulse} 3s ease-in-out infinite;
-  }
-`;
 
 export const MainContainer = styled.div`
-  text-align: center;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 5rem;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  height: 100%;
+
+  h1 {
+    color: #1d33d8;
+    font-size: 2.5rem;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
 
   .slice-content {
     color: #000;
     text-align: left;
-    line-height: 1.5;
-    span {
-      font-weight: bold;
-      color: #1d33d8;
-    }
   }
+`;
 
-  .map-row {
+export const RulesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 900px;
+`;
+
+export const RuleCard = styled.div`
+  position: relative;
+  height: 111px;
+
+  display: flex;
+  align-items: center;
+  padding-left: 7.5rem;
+  padding-right: 2.5rem;
+  line-height: 1;
+  background-image: url("/images/elemento-fundo-fases.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right center;
+
+  /* Avatar circle como ::before */
+  &::before {
+    content: "";
     position: absolute;
-    top: -2rem;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: block;
-
-      cursor: pointer;
-      transition: all 0.3s ease;
-
-      &:hover {
-        transform: translate(-50%, -50%) scale(1.05);
-        filter: brightness(1.1);
-      }
-    }
-  }
-
-  /* Fileira 4 - Mais ao fundo */
-  .f4 {
+    left: 2.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    background-image: url("/images/avatar-circle.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     z-index: 1;
   }
 
-  /* Fileira 3 */
-  .f3 {
+  .icon {
+    position: absolute;
+    left: 2.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 2;
+
+    img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
   }
 
-  /* Fileira 2 */
-  .f2 {
-    z-index: 3;
-  }
-
-  /* Fileira 1 - Mais na frente */
-  .f1 {
-    z-index: 4;
+  .text-container {
+    .text {
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.2;
+      text-align: left;
+      flex: 1;
+      margin-left: 0;
+    }
   }
 `;
 
@@ -313,30 +304,6 @@ export const SelectionBox = styled.div`
   }
 `;
 
-export const NameInput = styled.input`
-  padding: 1rem 1.5rem;
-  font-size: 1.2rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  color: white;
-  text-align: center;
-  outline: none;
-  transition: all 0.3s ease;
-  filter: none;
-  isolation: isolate;
-
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-  }
-
-  &:focus {
-    border-color: rgba(0, 153, 255, 0.8);
-    box-shadow: 0 0 15px rgba(0, 153, 255, 0.4);
-  }
-`;
-
 export const AvatarOption = styled.div`
   cursor: pointer;
   transition: all 0.3s ease;
@@ -377,12 +344,9 @@ export const AvatarOption = styled.div`
 `;
 
 export const AdvanceButton = styled.button`
-  position: absolute;
-  right: -2rem;
-  bottom: -1rem;
+  position: relative;
   background: none;
   border: none;
-  z-index: 10;
   cursor: pointer;
   transition: transform 0.2s ease;
   padding: 0;
@@ -392,6 +356,9 @@ export const AdvanceButton = styled.button`
     ${fadeInContent} 0.5s ease-out 1s both,
     ${buttonPulse} 2s ease-in-out infinite;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     transform: scale(1.02);
     filter: drop-shadow(0 0 1px #fbffffba)
@@ -421,16 +388,4 @@ export const AdvanceButton = styled.button`
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     transition: opacity 0.3s ease;
   }
-`;
-export const Title = styled.h2`
-  color: white;
-  background: linear-gradient(to bottom, rgba(0, 153, 255, 0.7), #0036cc);
-  padding: 0.5rem 1rem;
-  margin: 1rem auto var(--spacing-lg);
-  border: 3px solid white;
-  border-radius: 8px;
-  width: fit-content;
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.8);
-  animation: ${Lightpulse} 2s infinite;
-  min-width: 270px;
 `;

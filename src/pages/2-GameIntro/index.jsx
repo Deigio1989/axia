@@ -25,7 +25,7 @@ export function GameIntro() {
     setTimeout(() => {
       setIsButtonPressed(false);
       visitPage(4);
-      navigateWithTransition(navigate, "/levels", {
+      navigateWithTransition(navigate, "/rules", {
         type: "fade",
         duration: 300,
         delay: 0,

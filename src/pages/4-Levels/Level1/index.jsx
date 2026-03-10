@@ -1,75 +1,56 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useProgressionStore } from "../../../store/progressionStore";
-import { Avatar } from "../../../components/Avatar";
-import { NineSliceContainer } from "../../../components/NineSliceContainer";
-import { MainContainer, AdvanceButton, HouseContainer } from "./styles";
 import { PageLayout } from "../../../components";
+import { Intro } from "./Intro";
+import { Gameplay } from "./gameplay";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const SceneContainer = styled.div`
+  animation: ${(props) => (props.$isFadingOut ? fadeOut : fadeIn)} 500ms
+    ease-in-out;
+  width: 100%;
+  height: 100%;
+`;
 
 export function Level1() {
-  const { visitPage, playerName, navigateWithTransition } =
-    useProgressionStore();
-  const navigate = useNavigate();
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isButtonPressed, setIsButtonPressed] = useState(false);
+  const [scene, setScene] = useState("intro"); // 'intro', 'gameplay'
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
-  const handleAdvance = () => {
-    setIsButtonPressed(true);
-
+  const handleSceneTransition = (nextScene) => {
+    setIsFadingOut(true);
     setTimeout(() => {
-      setIsButtonPressed(false);
-      visitPage(4);
-      navigateWithTransition(navigate, "/", {
-        type: "fade",
-        duration: 300,
-        delay: 0,
-      });
-    }, 175);
+      setScene(nextScene);
+      setIsFadingOut(false);
+    }, 500); // Tempo do fade out
   };
 
   return (
     <PageLayout backgroundImage="/images/fundo-azul.png">
-      <MainContainer>
-        <div className="flex-column">
-          <NineSliceContainer
-            $imageUrl="/images/container.png"
-            // Pixels a cortar da imagem original
-            $sliceTop="30"
-            $sliceRight="35"
-            $sliceBottom="35"
-            $sliceLeft="35"
-            $repeat="stretch"
-            $minHeight="10px"
-            $padding="1rem"
-          >
-            <div className="slice-content">
-              <p>
-                Clique na porta da casa <br />
-                e veja que importância tem <br />
-                a energia elétrica no <br /> nosso dia a dia
-              </p>
-            </div>
-          </NineSliceContainer>
-          <AdvanceButton onClick={handleAdvance} $isPressed={isButtonPressed}>
-            <img
-              src={
-                isButtonPressed
-                  ? "/images/start-button-pressed.png"
-                  : "/images/start-button.png"
-              }
-              alt=""
-            />
-            <span>PLACEHOLDER</span>
-          </AdvanceButton>
-        </div>
-        <HouseContainer>
-          <img className="house-base house" src="/images/house-base.png" />
-          <img className="door-1" src="/images/house-door-1.png" />
-          <img className="door-2" src="/images/house-door-2.png" />
-          <img className="platibanda house" src="/images/platibanda.png" />
-          <img className="floor house" src="/images/house-floor.png" />
-        </HouseContainer>
-      </MainContainer>
+      <SceneContainer $isFadingOut={isFadingOut}>
+        {scene === "intro" && (
+          <Intro onComplete={() => handleSceneTransition("gameplay")} />
+        )}
+        {scene === "gameplay" && (
+          <Gameplay onComplete={() => console.log("Level completo!")} />
+        )}
+      </SceneContainer>
     </PageLayout>
   );
 }

@@ -7,7 +7,8 @@ export const GlobalStyles = createGlobalStyle`
     src: url('/fonts/DMSans_18pt-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: block; /* Previne FOUT - bloqueia até carregar */
+    size-adjust: 100%;
   }
 
   @font-face {
@@ -15,7 +16,8 @@ export const GlobalStyles = createGlobalStyle`
     src: url('/fonts/DMSans_18pt-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
-    font-display: swap;
+    font-display: block; /* Previne FOUT - bloqueia até carregar */
+    size-adjust: 100%;
   }
 
   @font-face {
@@ -23,7 +25,8 @@ export const GlobalStyles = createGlobalStyle`
     src: url('/fonts/DMSans_18pt-ExtraBold.ttf') format('truetype');
     font-weight: 800;
     font-style: normal;
-    font-display: swap;
+    font-display: block; /* Previne FOUT - bloqueia até carregar */
+    size-adjust: 100%;
   }
 
   * {
@@ -119,6 +122,13 @@ export const GlobalStyles = createGlobalStyle`
     background-color: var(--color-black);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+    /* Estabiliza renderização de fonte */
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1;
+    font-kerning: normal;
+    font-synthesis: none;
+    -webkit-font-synthesis: none;
   }
 
   #root {
