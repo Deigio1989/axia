@@ -42,29 +42,32 @@ export function Gameplay({ onComplete }) {
 
   // Inicializa posição do player no DOM quando a posição for calculada
   useEffect(() => {
-    if (playerRef.current && playerPosition.x && playerPosition.y) {
-      playerRef.current.style.left = `${playerPosition.x}px`;
-      playerRef.current.style.top = `${playerPosition.y}px`;
-      console.log("🔴 Posição inicial setada no DOM:", playerPosition);
+    if (!playerRef.current || !imgRef.current || !navMaskRef.current) return;
 
-      // Guarda bounds atuais como referência inicial para futuros resizes
-      const bounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
-      if (bounds) {
-        svgBoundsRef.current = bounds;
+    // Usa posição calculada pelo hook (já em coordenadas de gameplay)
+    const { x, y } = playerPosition;
+    if (!x || !y) return;
 
-        // Define bounds e tamanho base apenas uma vez
-        if (!baseBoundsRef.current) {
-          baseBoundsRef.current = bounds;
-        }
-        if (!basePlayerSizeRef.current && playerRef.current) {
-          basePlayerSizeRef.current =
-            playerRef.current.offsetWidth ||
-            playerRef.current.offsetHeight ||
-            50;
-        }
+    playerRef.current.style.left = `${x}px`;
+    playerRef.current.style.top = `${y}px`;
+    console.log("🔴 Posição inicial setada no DOM:", playerPosition);
+
+    // Calcula e guarda bounds atuais como referência inicial
+    const bounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
+    if (bounds) {
+      svgBoundsRef.current = bounds;
+
+      if (!baseBoundsRef.current) {
+        baseBoundsRef.current = bounds;
+      }
+      if (!basePlayerSizeRef.current && playerRef.current) {
+        basePlayerSizeRef.current =
+          playerRef.current.offsetWidth ||
+          playerRef.current.offsetHeight ||
+          50;
       }
     }
-  }, [playerPosition]);
+  }, [playerPosition, imgRef, navMaskRef]);
 
   // Função que recalcula posição e tamanho do player com base nos bounds
   const recomputePlayerLayout = () => {
@@ -81,18 +84,20 @@ export function Gameplay({ onComplete }) {
         playerRef.current.offsetWidth || playerRef.current.offsetHeight || 50;
     }
 
-    const prevBounds = svgBoundsRef.current || newBounds;
+    const prevBounds = baseBoundsRef.current || newBounds;
+
+    // Posição atual em coordenadas de gameplay
     const currentPos = getElementPosition(playerRef);
 
-    // Converte posição atual para coordenadas normalizadas dentro do SVG
+    // Converte posição atual para coordenadas normalizadas dentro dos bounds base
     const normX =
       prevBounds.width > 0
         ? (currentPos.x - prevBounds.offsetX) / prevBounds.width
-        : 0;
+        : 0.5;
     const normY =
       prevBounds.height > 0
         ? (currentPos.y - prevBounds.offsetY) / prevBounds.height
-        : 0;
+        : 0.5;
 
     // Aplica mesmas coordenadas normalizadas nos novos bounds
     const newX = newBounds.offsetX + normX * newBounds.width;
