@@ -17,9 +17,9 @@ export const useProgressionStore = create((set, get) => ({
   playerName: "",
   playerAvatar: "", // "H" ou "M"
 
-  // ========== Transições ==========
-  transitionType: "fadeGlow", // none, fade, fadeGlow, fadeScale, slideLeft, slideRight, wipeHorizontal
-  transitionDuration: 700,
+  // ========== Transições (DESABILITADAS GLOBALMENTE) ==========
+  transitionType: "none", // none, fade, fadeGlow, fadeScale, slideLeft, slideRight, wipeHorizontal
+  transitionDuration: 0,
 
   // ========== Ações de Navegação ==========
 
@@ -103,8 +103,9 @@ export const useProgressionStore = create((set, get) => ({
    * @param {string} type - Tipo: "none", "fade", "fadeGlow", "fadeScale", "slideLeft", "slideRight", "wipeHorizontal"
    * @param {number} duration - Duração em ms
    */
-  setTransition: (type = "fadeGlow", duration = 700) => {
-    set({ transitionType: type, transitionDuration: duration });
+  setTransition: (type = "none", duration = 0) => {
+    // Transições globais desabilitadas: mantém sempre "none"
+    set({ transitionType: "none", transitionDuration: 0 });
   },
 
   /**
@@ -114,7 +115,7 @@ export const useProgressionStore = create((set, get) => ({
    * @param {object} options - { type, duration, resetAfter, delay }
    */
   navigateWithTransition: (navigate, path, options = {}) => {
-    // Transições desabilitadas - navega imediatamente
+    // Transições desabilitadas - navega imediatamente, ignorando opções
     navigate(path);
   },
 

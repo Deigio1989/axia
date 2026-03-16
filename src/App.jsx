@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import useScorm from "./hooks/useScorm";
 import { useProgressionStore } from "./store/progressionStore";
 import ScormProgressTracker from "./components/ScormProgressTracker";
-import PageTransition from "./components/PageTransition";
 import {
   AppContainer,
   Header,
