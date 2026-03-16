@@ -39,13 +39,32 @@ export function Gameplay({ onComplete }) {
   // Custom hooks
   const canvasRef = useNavMaskCanvas(imgRef);
   const [playerPosition] = usePlayerPosition(imgRef, navMaskRef);
+  const [hasValidPosition, setHasValidPosition] = useState(false);
 
   // Inicializa posição do player no DOM quando a posição for calculada
   useEffect(() => {
-    if (playerRef.current && playerPosition.x && playerPosition.y) {
-      playerRef.current.style.left = `${playerPosition.x}px`;
-      playerRef.current.style.top = `${playerPosition.y}px`;
-      console.log("🔴 Posição inicial setada no DOM:", playerPosition);
+    if (!playerRef.current) return;
+
+    let x = playerPosition.x;
+    let y = playerPosition.y;
+
+    // Fallback: se a posição do hook ainda é inválida (0,0), coloca no centro da área
+    if ((!x || !y) && imgRef.current && navMaskRef.current) {
+      const boundsFallback = getSVGRenderBounds(
+        imgRef.current,
+        navMaskRef.current,
+      );
+      if (boundsFallback) {
+        x = boundsFallback.offsetX + boundsFallback.width / 2;
+        y = boundsFallback.offsetY + boundsFallback.height / 2;
+      }
+    }
+
+    if (x && y) {
+      playerRef.current.style.left = `${x}px`;
+      playerRef.current.style.top = `${y}px`;
+      setHasValidPosition(true);
+      console.log("🔴 Posição inicial setada no DOM:", { x, y });
 
       // Guarda bounds atuais como referência inicial para futuros resizes
       const bounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
@@ -58,7 +77,9 @@ export function Gameplay({ onComplete }) {
         }
         if (!basePlayerSizeRef.current && playerRef.current) {
           basePlayerSizeRef.current =
-            playerRef.current.offsetWidth || playerRef.current.offsetHeight || 50;
+            playerRef.current.offsetWidth ||
+            playerRef.current.offsetHeight ||
+            50;
         }
       }
     }
@@ -111,6 +132,7 @@ export function Gameplay({ onComplete }) {
     playerRef.current.style.width = `${newSize}px`;
     playerRef.current.style.height = `${newSize}px`;
 
+    setHasValidPosition(true);
     svgBoundsRef.current = newBounds;
   };
 
@@ -256,7 +278,9 @@ export function Gameplay({ onComplete }) {
               onClick={handleNavMaskClick}
               onMouseMove={handleNavMaskMouseMove}
             />
-            <GamePlayer ref={playerRef} $isMoving={isMoving} />
+            {hasValidPosition && (
+              <GamePlayer ref={playerRef} $isMoving={isMoving} />
+            )}
             <PathDebugVisualizer path={currentPath} />
           </GameplayArea>
           <GameplayInfo>
