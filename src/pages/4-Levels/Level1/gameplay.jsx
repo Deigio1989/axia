@@ -1,8 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useProgressionStore } from "../../../store/progressionStore";
-import { NineSliceContainer } from "../../../components/NineSliceContainer";
 import {
-  InfoTitle,
   MainContainer,
   GamePlayer,
   GameplayArea,
@@ -14,6 +12,7 @@ import {
 } from "./styles";
 import { NavigationArea } from "./components/NavigationArea";
 import { PathDebugVisualizer } from "./components/PathDebugVisualizer";
+import { GameplayInstructions } from "./components/GameplayInstructions";
 import { useNavMaskCanvas } from "./hooks/useNavMaskCanvas";
 import { usePlayerPosition } from "./hooks/usePlayerPosition";
 import {
@@ -23,24 +22,122 @@ import {
   svgToGameplayCoords,
 } from "./utils/coordinates";
 import { findPath, isWalkable } from "./utils/pathfinding";
-import { animatePath } from "./utils/animation";
+import { animateElementDirect, getElementPosition } from "./utils/domAnimation";
 
 export function Gameplay({ onComplete }) {
-  const { playerName, playerAvatar } = useProgressionStore();
+  const { playerAvatar } = useProgressionStore();
 
   // Refs
   const imgRef = useRef(null);
   const navMaskRef = useRef(null);
   const animationCancelRef = useRef(null);
+  const playerRef = useRef(null); // Ref para animar diretamente
+  const svgBoundsRef = useRef(null); // Guarda último bounds usado para reescalar
+  const baseBoundsRef = useRef(null); // Bounds de referência inicial
+  const basePlayerSizeRef = useRef(null); // Tamanho base do player (diâmetro)
 
   // Custom hooks
   const canvasRef = useNavMaskCanvas(imgRef);
-  const [playerPosition, setPlayerPosition] = usePlayerPosition(
-    imgRef,
-    navMaskRef,
-  );
+  const [playerPosition] = usePlayerPosition(imgRef, navMaskRef);
 
-  // State
+  // Inicializa posição do player no DOM quando a posição for calculada
+  useEffect(() => {
+    if (playerRef.current && playerPosition.x && playerPosition.y) {
+      playerRef.current.style.left = `${playerPosition.x}px`;
+      playerRef.current.style.top = `${playerPosition.y}px`;
+      console.log("🔴 Posição inicial setada no DOM:", playerPosition);
+
+      // Guarda bounds atuais como referência inicial para futuros resizes
+      const bounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
+      if (bounds) {
+        svgBoundsRef.current = bounds;
+
+        // Define bounds e tamanho base apenas uma vez
+        if (!baseBoundsRef.current) {
+          baseBoundsRef.current = bounds;
+        }
+        if (!basePlayerSizeRef.current && playerRef.current) {
+          basePlayerSizeRef.current =
+            playerRef.current.offsetWidth || playerRef.current.offsetHeight || 50;
+        }
+      }
+    }
+  }, [playerPosition]);
+
+  // Função que recalcula posição e tamanho do player com base nos bounds
+  const recomputePlayerLayout = () => {
+    if (!imgRef.current || !navMaskRef.current || !playerRef.current) return;
+
+    const newBounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
+    if (!newBounds) return;
+
+    if (!baseBoundsRef.current) {
+      baseBoundsRef.current = newBounds;
+    }
+    if (!basePlayerSizeRef.current && playerRef.current) {
+      basePlayerSizeRef.current =
+        playerRef.current.offsetWidth || playerRef.current.offsetHeight || 50;
+    }
+
+    const prevBounds = svgBoundsRef.current || newBounds;
+    const currentPos = getElementPosition(playerRef);
+
+    // Converte posição atual para coordenadas normalizadas dentro do SVG
+    const normX =
+      prevBounds.width > 0
+        ? (currentPos.x - prevBounds.offsetX) / prevBounds.width
+        : 0;
+    const normY =
+      prevBounds.height > 0
+        ? (currentPos.y - prevBounds.offsetY) / prevBounds.height
+        : 0;
+
+    // Aplica mesmas coordenadas normalizadas nos novos bounds
+    const newX = newBounds.offsetX + normX * newBounds.width;
+    const newY = newBounds.offsetY + normY * newBounds.height;
+
+    playerRef.current.style.left = `${newX}px`;
+    playerRef.current.style.top = `${newY}px`;
+
+    // Ajusta o tamanho (diâmetro) do player proporcionalmente à largura
+    const baseBounds = baseBoundsRef.current;
+    const baseSize = basePlayerSizeRef.current || 50;
+    const scale =
+      baseBounds && baseBounds.width > 0
+        ? newBounds.width / baseBounds.width
+        : 1;
+    const newSize = baseSize * scale;
+
+    playerRef.current.style.width = `${newSize}px`;
+    playerRef.current.style.height = `${newSize}px`;
+
+    svgBoundsRef.current = newBounds;
+  };
+
+  // Reposiciona/redimensiona o player quando a janela é redimensionada
+  useEffect(() => {
+    window.addEventListener("resize", recomputePlayerLayout);
+    return () => {
+      window.removeEventListener("resize", recomputePlayerLayout);
+    };
+  }, []);
+
+  // Observa mudanças no tamanho da área de navegação (caso o layout mude sem resize de janela)
+  useEffect(() => {
+    if (!navMaskRef.current || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      recomputePlayerLayout();
+    });
+
+    observer.observe(navMaskRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // State - apenas para controle visual, não para animação
   const [isMoving, setIsMoving] = useState(false);
   const [currentPath, setCurrentPath] = useState([]);
   const [isOverWalkable, setIsOverWalkable] = useState(true);
@@ -89,7 +186,9 @@ export function Gameplay({ onComplete }) {
     console.log("✅ Clique em área navegável! Calculando caminho...");
 
     // Converte posição atual do player para coordenadas do SVG
-    const playerSVGPos = gameplayToSvgCoords(playerPosition, svgBounds);
+    // Lê posição diretamente do DOM ao invés de state
+    const currentPlayerPos = getElementPosition(playerRef);
+    const playerSVGPos = gameplayToSvgCoords(currentPlayerPos, svgBounds);
 
     // Calcula o caminho com A*
     const path = findPath(playerSVGPos, { x, y }, canvasRef.current, svgBounds);
@@ -103,19 +202,19 @@ export function Gameplay({ onComplete }) {
     const gameplayPath = path.map((p) => svgToGameplayCoords(p, svgBounds));
 
     console.log("🗺️ Path ajustado com offsets:", {
-      playerGameplay: playerPosition,
+      playerGameplay: currentPlayerPos,
       playerSVG: playerSVGPos,
       destinationSVG: { x, y },
       offsetsUsed: { x: svgBounds.offsetX, y: svgBounds.offsetY },
     });
 
-    // Inicia animação
+    // Inicia animação - ANIMA DIRETAMENTE NO DOM VIA REF
     setIsMoving(true);
     setCurrentPath(gameplayPath);
 
-    animationCancelRef.current = animatePath(
+    animationCancelRef.current = animateElementDirect(
+      playerRef,
       gameplayPath,
-      (pos) => setPlayerPosition(pos),
       () => {
         setIsMoving(false);
         setCurrentPath([]);
@@ -157,38 +256,11 @@ export function Gameplay({ onComplete }) {
               onClick={handleNavMaskClick}
               onMouseMove={handleNavMaskMouseMove}
             />
-            <GamePlayer
-              $x={playerPosition.x}
-              $y={playerPosition.y}
-              $isMoving={isMoving}
-            />
+            <GamePlayer ref={playerRef} $isMoving={isMoving} />
             <PathDebugVisualizer path={currentPath} />
           </GameplayArea>
           <GameplayInfo>
-            <NineSliceContainer
-              $imageUrl="/images/container.png"
-              $sliceTop="30"
-              $sliceRight="35"
-              $sliceBottom="35"
-              $sliceLeft="35"
-              $repeat="stretch"
-              $minHeight="10px"
-              $padding="1rem"
-            >
-              <div className="slice-content">
-                <InfoTitle>
-                  VAMOS FAZER UMA ATIVIDADE SIMPLES PARA VOCÊ SE FAMILIARIZAR
-                  COM SEU AVATAR.
-                </InfoTitle>
-                <p>
-                  Clique nos cômodos da casa, para coletar os ícones de raios e
-                  revelar o que depende de energia elétrica nesse local.
-                </p>
-                <span>
-                  Cuidado: um dos cômodos é uma armadilha e deve ser evitado!
-                </span>
-              </div>
-            </NineSliceContainer>
+            <GameplayInstructions />
           </GameplayInfo>
         </GameplayContent>
       </GameplayContainer>

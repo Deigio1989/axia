@@ -301,8 +301,7 @@ export const GamePlayer = styled.div`
   background-color: red;
   border-radius: 50%;
   transform: translate(-50%, -50%) translateZ(0);
-  left: ${(props) => props.$x}px;
-  top: ${(props) => props.$y}px;
+  /* left e top são controlados diretamente via DOM (element.style) */
   /* Sem transitions: animação via requestAnimationFrame é mais smooth */
   will-change: left, top;
   z-index: 100;
