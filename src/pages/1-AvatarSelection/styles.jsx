@@ -317,11 +317,8 @@ export const AvatarOption = styled.div`
 
 export const AdvanceButton = styled.button`
   position: relative;
-
-  border: none;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: transform 0.2s ease;
-  padding: 0;
   margin-top: 1rem;
   isolation: isolate;
   animation:
@@ -341,12 +338,12 @@ export const AdvanceButton = styled.button`
   color: #1d33d8;
   background-color: #e7e7e7;
   padding: 1rem 2.5rem;
-  border-radius: 99px;
-  border: 4px solid #1d33d8;
+  border-radius: 14px;
+  /*  border: 4px solid #1d33d8;
   box-shadow:
     0 0 4px 1px #e7e7e74e,
     inset 0 0 4px 1px #6049494e;
-
+ */
   font-weight: 700;
   font-size: 1.2rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);

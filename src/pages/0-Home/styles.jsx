@@ -79,7 +79,7 @@ export const LogoBackgroundWrapper = styled.div`
   }
 
   /* Plataforma circular embaixo do globo - perspectiva elíptica */
-  &::before {
+  /*   &::before {
     content: "";
     position: absolute;
 
@@ -97,7 +97,7 @@ export const LogoBackgroundWrapper = styled.div`
     border-radius: 50%;
     z-index: 0;
     animation: ${GlowPulse} 3s ease-in-out infinite;
-  }
+  } */
 
   /* Luz refletida embaixo do globo */
   &::after {
