@@ -53,34 +53,15 @@ export const WelcomeContainer = styled.div`
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
-    transition:
-      transform 0.2s ease,
-      filter 0.2s ease;
-    /*     animation: ${Buttonpulse} 3s ease-in-out infinite;
- */
+    /* Desativa o pulse herdado de AdvanceButton para não competir com o translateX */
+    animation: none !important;
+    transition: filter 0.2s ease;
+
     &:hover {
-      transform: translateX(-50%) scale(1.02);
+      transform: translateX(-50%) !important;
       filter: drop-shadow(0 0 1px #fbffffba)
         drop-shadow(0 0 2px rgba(152, 182, 255, 0.4))
         drop-shadow(0 10px 30px rgba(0, 200, 255, 0.5));
-    }
-
-    img {
-      height: 75px;
-      display: block;
-    }
-
-    p {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      margin: 0;
-      color: #1d33d8;
-      font-weight: bold;
-      font-size: 1.2rem;
-      pointer-events: none;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
   }
 `;

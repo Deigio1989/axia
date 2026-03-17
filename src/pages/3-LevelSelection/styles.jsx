@@ -1,4 +1,5 @@
 import styled, { keyframes, css } from "styled-components";
+import { AdvanceButton } from "../1-AvatarSelection/styles";
 
 // Multiplicador de escala para o glow
 const GLOW_SCALE = 1.5;
@@ -376,17 +377,15 @@ export const AvatarOption = styled.div`
     `}
 `;
 
-export const AdvanceButton = styled.button`
+export const LevelSelectButton = styled(AdvanceButton)`
   position: absolute;
   right: -2rem;
   bottom: -1rem;
-  background: none;
-  border: none;
-  z-index: 10;
+
+  z-index: 100;
   cursor: pointer;
   transition: transform 0.2s ease;
-  padding: 0;
-  margin-top: 1rem;
+
   isolation: isolate;
   animation:
     ${fadeInContent} 0.5s ease-out 1s both,

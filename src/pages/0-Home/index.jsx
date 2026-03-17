@@ -9,6 +9,7 @@ import {
   LogoBackground,
 } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { AdvanceButton } from "../1-AvatarSelection/styles";
 
 export function HomePage() {
   const { visitPage, navigateWithTransition } = useProgressionStore();
@@ -45,17 +46,9 @@ export function HomePage() {
         <LogoBackground src="/images/logo-axia.png" alt="Axia Energia" />
       </LogoBackgroundWrapper>
 
-      <div className="start-button" onClick={handleStart}>
-        <img
-          src={
-            isPressed
-              ? "/images/start-button-pressed.png"
-              : "/images/start-button.png"
-          }
-          alt=""
-        />
-        <p>INICIAR</p>
-      </div>
+      <AdvanceButton className="start-button" onClick={handleStart}>
+        INICIAR
+      </AdvanceButton>
 
       <LogoFooter src="/images/logo-axia-footer.png" alt="Axia Energia" />
     </WelcomeContainer>

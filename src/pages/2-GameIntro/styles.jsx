@@ -280,46 +280,4 @@ export const AvatarOption = styled.div`
     `}
 `;
 
-export const AdvanceButton = styled.button`
-  position: relative;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  padding: 0;
-  margin-top: 1rem;
-  isolation: isolate;
-  animation:
-    ${fadeInContent} 0.5s ease-out 1s both,
-    ${buttonPulse} 2s ease-in-out infinite;
-
-  &:hover {
-    transform: scale(1.02);
-    filter: drop-shadow(0 0 1px #fbffffba)
-      drop-shadow(0 0 2px rgba(152, 182, 255, 0.4))
-      drop-shadow(0 10px 30px rgba(0, 200, 255, 0.5));
-    animation-play-state: paused;
-  }
-
-  img {
-    height: 75px;
-    display: block;
-    transition:
-      filter 0.3s ease,
-      opacity 0.3s ease;
-  }
-
-  span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    color: #1d33d8;
-    font-weight: bold;
-    font-size: 1.2rem;
-    pointer-events: none;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    transition: opacity 0.3s ease;
-  }
-`;
+// AdvanceButton agora reutiliza o componente unificado de AvatarSelection

@@ -23,6 +23,7 @@ import {
 } from "./utils/coordinates";
 import { findPath, isWalkable } from "./utils/pathfinding";
 import { animateElementDirect, getElementPosition } from "./utils/domAnimation";
+import { useTopDownSprite } from "./hooks/useTopDownSprite";
 
 export function Gameplay({ onComplete }) {
   const { playerAvatar } = useProgressionStore();
@@ -36,6 +37,7 @@ export function Gameplay({ onComplete }) {
   const baseBoundsRef = useRef(null); // Bounds de referência inicial
   const basePlayerSizeRef = useRef(null); // Tamanho base do player (diâmetro)
   const initialPlayerPosRef = useRef(null); // Posição inicial em coordenadas de gameplay
+  const playerImageRef = useRef(null);
 
   // Custom hooks
   const canvasRef = useNavMaskCanvas(imgRef);
@@ -173,6 +175,8 @@ export function Gameplay({ onComplete }) {
   const [currentPath, setCurrentPath] = useState([]);
   const [isOverWalkable, setIsOverWalkable] = useState(true);
 
+  useTopDownSprite({ imgRef: playerImageRef, isMoving });
+
   /**
    * Handler para clique na área de navegação
    */
@@ -250,6 +254,20 @@ export function Gameplay({ onComplete }) {
         setIsMoving(false);
         setCurrentPath([]);
         animationCancelRef.current = null;
+        if (playerRef.current) {
+          playerRef.current.style.setProperty("--rotation", "0deg");
+        }
+      },
+      150,
+      ({ dx, dy }) => {
+        if (!playerRef.current) return;
+        const angleRad = Math.atan2(dy, dx);
+        // Sem +90: assume que o sprite "parado" já aponta na direção positiva de X
+        const angleDeg = (angleRad * 180) / Math.PI + 180;
+        playerRef.current.style.setProperty(
+          "--rotation",
+          `${angleDeg.toFixed(2)}deg`,
+        );
       },
     );
   };
@@ -274,7 +292,9 @@ export function Gameplay({ onComplete }) {
   return (
     <MainContainer>
       <GameplayContainer>
-        <GameplayHeader></GameplayHeader>
+        <GameplayHeader>
+          <img src="./images/score-bar.png" alt="Score Bar" />
+        </GameplayHeader>
 
         <GameplayContent>
           <GameplayArea>
@@ -287,7 +307,9 @@ export function Gameplay({ onComplete }) {
               onClick={handleNavMaskClick}
               onMouseMove={handleNavMaskMouseMove}
             />
-            <GamePlayer ref={playerRef} $isMoving={isMoving} />
+            <GamePlayer ref={playerRef} $isMoving={isMoving}>
+              <img ref={playerImageRef} alt="Jogador" draggable={false} />
+            </GamePlayer>
             <PathDebugVisualizer path={currentPath} />
           </GameplayArea>
           <GameplayInfo>

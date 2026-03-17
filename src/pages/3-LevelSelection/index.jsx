@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useProgressionStore } from "../../store/progressionStore";
 import { preloadImages, LEVEL_ASSETS } from "../../services/imagePreloader";
 import { NineSliceContainer, MapLevel } from "../../components";
-import { MainContainer, AdvanceButton, MapContainer, Title } from "./styles";
+import {
+  LevelSelectButton,
+  MainContainer,
+  MapContainer,
+  Title,
+} from "./styles";
 import { PageLayout } from "../../components";
 
 export function LevelSelection() {
@@ -256,17 +261,9 @@ export function LevelSelection() {
             />
           </div>
           {selectedLevel && (
-            <AdvanceButton onClick={handleAdvance} $isPressed={isButtonPressed}>
-              <img
-                src={
-                  isButtonPressed
-                    ? "/images/start-button-pressed.png"
-                    : "/images/start-button.png"
-                }
-                alt=""
-              />
-              <span>INICIAR</span>
-            </AdvanceButton>
+            <LevelSelectButton onClick={handleAdvance}>
+              INICIAR
+            </LevelSelectButton>
           )}
         </MapContainer>
       </MainContainer>

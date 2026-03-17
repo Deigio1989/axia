@@ -317,7 +317,7 @@ export const AvatarOption = styled.div`
 
 export const AdvanceButton = styled.button`
   position: relative;
-  background: none;
+
   border: none;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: transform 0.2s ease;
@@ -335,44 +335,31 @@ export const AdvanceButton = styled.button`
       drop-shadow(0 0 2px rgba(152, 182, 255, 0.4))
       drop-shadow(0 10px 30px rgba(0, 200, 255, 0.5));
     animation-play-state: paused;
+    cursor: pointer;
   }
 
-  img {
-    height: 75px;
-    display: block;
-    transition:
-      filter 0.3s ease,
-      opacity 0.3s ease;
+  color: #1d33d8;
+  background-color: #e7e7e7;
+  padding: 1rem 2.5rem;
+  border-radius: 99px;
+  border: 4px solid #1d33d8;
+  box-shadow:
+    0 0 4px 1px #e7e7e74e,
+    inset 0 0 4px 1px #6049494e;
 
-    /* Greyscale quando desabilitado */
-    ${(props) =>
-      props.disabled &&
-      css`
-        filter: grayscale(1);
-        opacity: 0.5;
-      `}
-  }
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.3s ease;
 
-  span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-    color: #1d33d8;
-    font-weight: bold;
-    font-size: 1.2rem;
-    pointer-events: none;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    transition: opacity 0.3s ease;
-
-    /* Opacidade reduzida quando desabilitado */
-    ${(props) =>
-      props.disabled &&
-      css`
-        opacity: 0.5;
-      `}
-  }
+  /* Opacidade reduzida quando desabilitado */
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #c2c2c2;
+      color: #7a7a7a;
+      opacity: 0.5;
+    `}
 
   ${(props) =>
     props.disabled &&

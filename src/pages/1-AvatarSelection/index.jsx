@@ -64,7 +64,6 @@ export function AvatarSelection() {
     <MainContainer>
       <div className="top-bar-container">
         <img className="top-bar" src="images/barra-sup.png" alt="" />
-        <img className="logo" src="/images/avatar-selection-logo.png" alt="" />
       </div>
 
       <div className="content">
@@ -82,17 +81,8 @@ export function AvatarSelection() {
               <AdvanceButton
                 onClick={handleAdvanceStep1}
                 disabled={!canAdvanceStep1 || isTransitioning}
-                $isPressed={isButtonPressed}
               >
-                <img
-                  src={
-                    isButtonPressed
-                      ? "/images/start-button-pressed.png"
-                      : "/images/start-button.png"
-                  }
-                  alt=""
-                />
-                <span>AVANÇAR</span>
+                AVANÇAR
               </AdvanceButton>
             </SelectionBox>
           </>
@@ -120,17 +110,8 @@ export function AvatarSelection() {
               <AdvanceButton
                 onClick={handleAdvanceStep2}
                 disabled={!canAdvanceStep2 || isTransitioning}
-                $isPressed={isButtonPressed}
               >
-                <img
-                  src={
-                    isButtonPressed
-                      ? "/images/start-button-pressed.png"
-                      : "/images/start-button.png"
-                  }
-                  alt=""
-                />
-                <span>AVANÇAR</span>
+                AVANÇAR
               </AdvanceButton>
             </SelectionBox>
           </>

@@ -11,6 +11,7 @@ import { generateSmoothCurve } from "./animation";
  * @param {Array} path - Array de waypoints {x, y}
  * @param {Function} onComplete - Callback ao finalizar
  * @param {number} speed - Velocidade em pixels por segundo (default: 150)
+ * @param {Function} [onStep] - Callback opcional chamado a cada frame com { x, y, dx, dy }
  * @returns {Function} Função para cancelar a animação
  */
 export const animateElementDirect = (
@@ -18,6 +19,7 @@ export const animateElementDirect = (
   path,
   onComplete,
   speed = 150,
+  onStep,
 ) => {
   if (!elementRef.current || path.length <= 1) {
     onComplete?.();
@@ -65,6 +67,10 @@ export const animateElementDirect = (
     // ATUALIZA DIRETAMENTE O DOM - SEM ESTADO
     element.style.left = `${x}px`;
     element.style.top = `${y}px`;
+
+    if (onStep) {
+      onStep({ x, y, dx, dy });
+    }
 
     if (progress >= 1) {
       currentIndex++;

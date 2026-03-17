@@ -16,7 +16,6 @@ export function PageLayout({
     >
       <div className="top-bar-container">
         <img className="top-bar" src="/images/barra-sup.png" alt="" />
-        {showLogo && <img className="logo" src={logoSrc} alt="" />}
       </div>
 
       <div className="content">{children}</div>

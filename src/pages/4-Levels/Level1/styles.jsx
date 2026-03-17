@@ -296,22 +296,26 @@ export const InfoTitle = styled.h2`
 
 export const GamePlayer = styled.div`
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background-color: red;
-  border-radius: 50%;
-  transform: translate(-50%, -50%) translateZ(0);
+  width: 80px;
+  height: 80px;
+  /* desloca um pouco mais para cima para alinhar os "pés" com a linha do caminho */
+  transform: translate(-50%, -70%) rotate(var(--rotation, 0deg)) translateZ(0);
   /* left e top são controlados diretamente via DOM (element.style) */
   /* Sem transitions: animação via requestAnimationFrame é mais smooth */
   will-change: left, top;
   z-index: 100;
   pointer-events: none;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-  border: 2px solid #fff;
 
   /* Previne flickering durante animação */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+  }
 `;
 
 export const GameplayArea = styled.div`

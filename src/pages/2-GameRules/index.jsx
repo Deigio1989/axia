@@ -7,10 +7,10 @@ import {
   MainContainer,
   SelectionTitle,
   SelectionBox,
-  AdvanceButton,
   RulesGrid,
   RuleCard,
 } from "./styles";
+import { AdvanceButton } from "../1-AvatarSelection/styles";
 import { PageLayout } from "../../components";
 
 const rulesData = [
@@ -73,17 +73,7 @@ export function GameRules() {
                 </div>
               </RuleCard>
             ))}
-            <AdvanceButton onClick={handleAdvance} $isPressed={isButtonPressed}>
-              <img
-                src={
-                  isButtonPressed
-                    ? "/images/start-button-pressed.png"
-                    : "/images/start-button.png"
-                }
-                alt=""
-              />
-              <span>AVANÇAR</span>
-            </AdvanceButton>
+            <AdvanceButton onClick={handleAdvance}>AVANÇAR</AdvanceButton>
           </RulesGrid>
         </div>
       </MainContainer>
