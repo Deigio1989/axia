@@ -17,12 +17,22 @@ export function usePlayerPosition(
 
   useEffect(() => {
     const adjustInitialPosition = () => {
+      if (!imgRef.current || !containerRef.current) {
+        console.log("[usePlayerPosition] refs ainda nulos", {
+          hasImg: !!imgRef.current,
+          hasContainer: !!containerRef.current,
+        });
+        setTimeout(adjustInitialPosition, 100);
+        return;
+      }
+
       const svgBounds = getSVGRenderBounds(
         imgRef.current,
         containerRef.current,
       );
       if (!svgBounds) {
         // SVG ainda não carregou, tenta novamente
+        console.log("[usePlayerPosition] svgBounds null, retry...");
         setTimeout(adjustInitialPosition, 100);
         return;
       }
@@ -38,7 +48,12 @@ export function usePlayerPosition(
       console.log("🔴 Player posição inicial ajustada:", {
         svgCoords: initialSVGPosition,
         gameplayCoords: initialGameplayPos,
-        offsets: { x: svgBounds.offsetX, y: svgBounds.offsetY },
+        bounds: {
+          offsetX: svgBounds.offsetX,
+          offsetY: svgBounds.offsetY,
+          width: svgBounds.width,
+          height: svgBounds.height,
+        },
       });
     };
 

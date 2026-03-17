@@ -1,4 +1,4 @@
-# Axia Energia - SCORM Training
+# AXIA Energia - SCORM Training
 
 Projeto de treinamento interativo compatível com SCORM 1.2, desenvolvido com Vite, React 19, Styled Components e Zustand.
 

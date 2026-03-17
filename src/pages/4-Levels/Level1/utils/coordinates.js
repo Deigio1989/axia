@@ -37,8 +37,7 @@ export const getSVGRenderBounds = (img, container) => {
     offsetX = (containerRect.width - renderWidth) / 2;
     offsetY = 0;
   }
-
-  return {
+  const result = {
     left: containerRect.left + offsetX,
     top: containerRect.top + offsetY,
     width: renderWidth,
@@ -46,6 +45,28 @@ export const getSVGRenderBounds = (img, container) => {
     offsetX,
     offsetY,
   };
+
+  // Log detalhado uma vez por sessão para diagnosticar diferenças entre local/server
+  try {
+    const win = typeof window !== "undefined" ? window : null;
+    if (win && !win.__loggedSVGRenderBounds) {
+      win.__loggedSVGRenderBounds = true;
+      console.log("[getSVGRenderBounds]", {
+        natural: { w: naturalWidth, h: naturalHeight },
+        container: {
+          left: containerRect.left,
+          top: containerRect.top,
+          width: containerRect.width,
+          height: containerRect.height,
+        },
+        result,
+      });
+    }
+  } catch {
+    // Ignora falhas em ambientes sem window
+  }
+
+  return result;
 };
 
 /**

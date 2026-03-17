@@ -37,7 +37,7 @@ export function HomePage() {
       <Subtitle>
         <h3>
           Participe da <br /> revolução <br /> energética da <br />{" "}
-          <b>Axia Energia!</b>
+          <b>AXIA Energia!</b>
         </h3>
       </Subtitle>
 

@@ -42,15 +42,25 @@ export function Gameplay({ onComplete }) {
 
   // Inicializa posição do player no DOM quando a posição for calculada
   useEffect(() => {
-    if (!playerRef.current || !imgRef.current || !navMaskRef.current) return;
+    if (!playerRef.current || !imgRef.current || !navMaskRef.current) {
+      console.log("[Gameplay] refs ainda nulos na init", {
+        hasPlayer: !!playerRef.current,
+        hasImg: !!imgRef.current,
+        hasNavMask: !!navMaskRef.current,
+      });
+      return;
+    }
 
     // Usa posição calculada pelo hook (já em coordenadas de gameplay)
     const { x, y } = playerPosition;
-    if (!x || !y) return;
+    if (!x || !y) {
+      console.log("[Gameplay] playerPosition inválida na init", playerPosition);
+      return;
+    }
 
     playerRef.current.style.left = `${x}px`;
     playerRef.current.style.top = `${y}px`;
-    console.log("🔴 Posição inicial setada no DOM:", playerPosition);
+    console.log("🔴 Posição inicial setada no DOM (Gameplay):", playerPosition);
 
     // Calcula e guarda bounds atuais como referência inicial
     const bounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
@@ -62,9 +72,7 @@ export function Gameplay({ onComplete }) {
       }
       if (!basePlayerSizeRef.current && playerRef.current) {
         basePlayerSizeRef.current =
-          playerRef.current.offsetWidth ||
-          playerRef.current.offsetHeight ||
-          50;
+          playerRef.current.offsetWidth || playerRef.current.offsetHeight || 50;
       }
     }
   }, [playerPosition, imgRef, navMaskRef]);
@@ -74,7 +82,10 @@ export function Gameplay({ onComplete }) {
     if (!imgRef.current || !navMaskRef.current || !playerRef.current) return;
 
     const newBounds = getSVGRenderBounds(imgRef.current, navMaskRef.current);
-    if (!newBounds) return;
+    if (!newBounds) {
+      console.log("[Gameplay] recompute sem bounds");
+      return;
+    }
 
     if (!baseBoundsRef.current) {
       baseBoundsRef.current = newBounds;
@@ -105,6 +116,14 @@ export function Gameplay({ onComplete }) {
 
     playerRef.current.style.left = `${newX}px`;
     playerRef.current.style.top = `${newY}px`;
+
+    console.log("[Gameplay] recomputePlayerLayout", {
+      prevBounds,
+      newBounds,
+      currentPos,
+      norm: { x: normX, y: normY },
+      newPos: { x: newX, y: newY },
+    });
 
     // Ajusta o tamanho (diâmetro) do player proporcionalmente à largura
     const baseBounds = baseBoundsRef.current;

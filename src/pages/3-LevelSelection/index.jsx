@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProgressionStore } from "../../store/progressionStore";
+import { preloadImages, LEVEL_ASSETS } from "../../services/imagePreloader";
 import { NineSliceContainer, MapLevel } from "../../components";
 import { MainContainer, AdvanceButton, MapContainer, Title } from "./styles";
 import { PageLayout } from "../../components";
@@ -44,6 +45,9 @@ export function LevelSelection() {
     console.log(`Nível ${levelNumber} clicado!`);
     setSelectedLevel(levelNumber);
     setCardWidth(400);
+
+    // Pré-carrega assets da fase em background (não bloqueia UI)
+    preloadImages(LEVEL_ASSETS[levelNumber] || []);
   };
 
   const handleAdvance = () => {
@@ -54,6 +58,8 @@ export function LevelSelection() {
     }, 175);
     setTimeout(() => {
       if (selectedLevel) {
+        // Garante que o preload da fase foi disparado antes de navegar
+        preloadImages(LEVEL_ASSETS[selectedLevel] || []);
         navigate(`/levels/${selectedLevel}`);
       }
     }, 200);
