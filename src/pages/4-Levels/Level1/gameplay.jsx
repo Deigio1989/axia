@@ -35,6 +35,7 @@ export function Gameplay({ onComplete }) {
   const svgBoundsRef = useRef(null); // Guarda último bounds usado para reescalar
   const baseBoundsRef = useRef(null); // Bounds de referência inicial
   const basePlayerSizeRef = useRef(null); // Tamanho base do player (diâmetro)
+  const initialPlayerPosRef = useRef(null); // Posição inicial em coordenadas de gameplay
 
   // Custom hooks
   const canvasRef = useNavMaskCanvas(imgRef);
@@ -60,6 +61,9 @@ export function Gameplay({ onComplete }) {
 
     playerRef.current.style.left = `${x}px`;
     playerRef.current.style.top = `${y}px`;
+    if (!initialPlayerPosRef.current) {
+      initialPlayerPosRef.current = { x, y };
+    }
     console.log("🔴 Posição inicial setada no DOM (Gameplay):", playerPosition);
 
     // Calcula e guarda bounds atuais como referência inicial
@@ -97,17 +101,18 @@ export function Gameplay({ onComplete }) {
 
     const prevBounds = baseBoundsRef.current || newBounds;
 
-    // Posição atual em coordenadas de gameplay
-    const currentPos = getElementPosition(playerRef);
+    // Sempre usa a posição inicial como referência para proporcionalidade
+    const basePos =
+      initialPlayerPosRef.current || getElementPosition(playerRef);
 
-    // Converte posição atual para coordenadas normalizadas dentro dos bounds base
+    // Converte posição base para coordenadas normalizadas dentro dos bounds base
     const normX =
       prevBounds.width > 0
-        ? (currentPos.x - prevBounds.offsetX) / prevBounds.width
+        ? (basePos.x - prevBounds.offsetX) / prevBounds.width
         : 0.5;
     const normY =
       prevBounds.height > 0
-        ? (currentPos.y - prevBounds.offsetY) / prevBounds.height
+        ? (basePos.y - prevBounds.offsetY) / prevBounds.height
         : 0.5;
 
     // Aplica mesmas coordenadas normalizadas nos novos bounds
@@ -120,7 +125,7 @@ export function Gameplay({ onComplete }) {
     console.log("[Gameplay] recomputePlayerLayout", {
       prevBounds,
       newBounds,
-      currentPos,
+      basePos,
       norm: { x: normX, y: normY },
       newPos: { x: newX, y: newY },
     });
